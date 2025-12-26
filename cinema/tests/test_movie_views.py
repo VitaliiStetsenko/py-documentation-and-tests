@@ -1,4 +1,8 @@
+import tempfile
+
+from PIL import Image
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -185,3 +189,17 @@ class AdminMovieTest(TestCase):
         self.assertEqual(
             payload["actors"], list(movie.actors.values_list("id", flat=True))
         )
+
+    def test_upload_image(self):
+        movie = create_movie()
+        url = reverse("cinema:movie-upload-image", args=[movie.id])
+
+        with tempfile.NamedTemporaryFile(suffix=".jpg") as ntf:
+            img = Image.new("RGB", (10, 10))
+            img.save(ntf, format="JPEG")
+            ntf.seek(0)
+            response = self.client.post(url, {"image": ntf}, format="multipart")
+
+        movie.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(bool(movie.image))
