@@ -137,12 +137,12 @@ class MovieViewSet(
                 required=False,
             ),
             OpenApiParameter(
-                "genres.id",
+                "genres",
                 type={"type": "list", "items": {"type": "number"}},
                 description="Movie genre ID"
             ),
             OpenApiParameter(
-                "actors.id",
+                "actors",
                 type={"type": "list", "items": {"type": "number"}},
                 description="Movie author ID"
             )
@@ -201,7 +201,7 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
                 required=False,
             ),
             OpenApiParameter(
-                "Movie",
+                "movie",
                 type={"type": "list", "items": {"type": "number"}},
                 description="Movie ID"
             ),
